@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
-import { Navbar, Nav, Container, Button } from 'react-bootstrap';
+
+/**
+ * Name: Sathvik Alla
+ * Date: November 20, 2026
+ * Course: IT-302-001 Advanced Internet Applications
+ * Assignment: Phase 5 C.U.D. Node.js Data using React.js
+ * Email: sa3242@njit.edu
+ */
+
+import React, { useState } from "react";
+import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+
 import StarWarsList from "./components/StarWarsList";
 import StarWar from "./components/StarWar";
+import Login from "./components/Login";
+import AddFeedback from "./components/AddFeedback";
 
 function App() {
   const [user, setUser] = useState(null);
 
-  const handleLogin = () => {
-    setUser({ username: 'sa3242' });
+  const handleLogin = (userInfo) => {
+    setUser(userInfo);
   };
 
   const handleLogout = () => {
@@ -19,7 +31,7 @@ function App() {
     <>
       <Navbar bg="dark" variant="dark" expand="lg">
         <Container>
-          <Navbar.Brand as={Link} to="/">
+          <Navbar.Brand as={Link} to="/sa3242_starwars">
             Star Wars Database
           </Navbar.Brand>
 
@@ -34,11 +46,24 @@ function App() {
 
             <Nav>
               {user ? (
-                <Button variant="outline-light" onClick={handleLogout}>
-                  Logout
-                </Button>
+                <>
+                  <Navbar.Text className="me-3">
+                    Welcome, {user.username}
+                  </Navbar.Text>
+
+                  <Button
+                    variant="outline-light"
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </Button>
+                </>
               ) : (
-                <Button variant="outline-light" onClick={handleLogin}>
+                <Button
+                  as={Link}
+                  to="/sa3242_login"
+                  variant="outline-light"
+                >
                   Login
                 </Button>
               )}
@@ -51,19 +76,29 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<StarWarsList />}
-         />
+            element={<Navigate to="/sa3242_starwars" replace />}
+          />
 
           <Route
             path="/sa3242_starwars"
             element={<StarWarsList />}
-         />
+          />
 
           <Route
             path="/sa3242_starwars/:id"
-            element={<StarWar />}
+            element={<StarWar user={user} />}
           />
-        </Routes> 
+
+          <Route
+            path="/sa3242_login"
+            element={<Login login={handleLogin} />}
+          />
+
+          <Route
+            path="/sa3242_starwars/:id/feedback"
+            element={<AddFeedback user={user} />}
+          />
+        </Routes>
       </Container>
     </>
   );
